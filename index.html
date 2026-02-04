@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chess Game - Player vs AI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <h1>♔ AI Chess Game ♚</h1>
+            <p class="subtitle">Player vs AI</p>
+        </header>
+
+        <div class="game-info">
+            <div class="player-info">
+                <div class="player player-white">
+                    <h3>⬜ Player (White)</h3>
+                    <div class="score" id="playerScore">Score: 0</div>
+                    <div class="captures" id="playerCaptures"></div>
+                </div>
+                <div class="turn-indicator" id="turnIndicator">
+                    White's Turn
+                </div>
+                <div class="player player-black">
+                    <h3>⬛ AI (Black)</h3>
+                    <div class="score" id="aiScore">Score: 0</div>
+                    <div class="captures" id="aiCaptures"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="board-container">
+            <div class="board" id="chessBoard"></div>
+        </div>
+
+        <div class="game-controls">
+            <button class="btn" id="newGameBtn">New Game</button>
+            <button class="btn" id="undoBtn">Undo Move</button>
+            <button class="btn" id="hintBtn">Get Hint</button>
+        </div>
+
+        <div class="game-status">
+            <div class="status-message" id="statusMessage">Game started! Make your move.</div>
+            <div class="move-history">
+                <h3>Move History</h3>
+                <div id="moveList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="chess-engine.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
