@@ -2,6 +2,9 @@
 let game;
 let selectedSquare = null;
 let validMoves = [];
+let gameTimer = null;
+let startTime = 0;
+let elapsedTime = 0;
 
 // Initialize the game
 function initGame() {
@@ -10,6 +13,8 @@ function initGame() {
     updateScores();
     updateTurnIndicator();
     updateStatusMessage('Game started! White moves first.');
+        startTimer();
+
 }
 
 // Render the chess board
@@ -56,6 +61,7 @@ function handleSquareClick(row, col) {
             deselectSquare();
         } else if (game.isValidMove(selectedRow, selectedCol, row, col)) {
             makePlayerMove(selectedRow, selectedCol, row, col);
+                        checkWinner();
         } else if (square && game.getPieceColor(square) === game.currentPlayer) {
             // Select different piece
             deselectSquare();
@@ -263,3 +269,70 @@ document.getElementById('hintBtn').addEventListener('click', () => {
 
 // Start the game when page loads
 window.addEventListener('DOMContentLoaded', initGame);
+
+// Timer functions
+function startTimer() {
+    startTime = Date.now() - elapsedTime;
+    gameTimer = setInterval(updateTimer, 1000);
+}
+
+function updateTimer() {
+    elapsedTime = Date.now() - startTime;
+    const minutes = Math.floor(elapsedTime / 60000);
+    const seconds = Math.floor((elapsedTime % 60000) / 1000);
+    document.getElementById('timer').textContent = `⏱ ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+
+function stopTimer() {
+    if (gameTimer) {
+        clearInterval(gameTimer);
+        gameTimer = null;
+    }
+}
+
+function resetTimer() {
+    stopTimer();
+    elapsedTime = 0;
+    document.getElementById('timer').textContent = '⏱ 00:00';
+}
+
+// Winner detection
+function checkWinner() {
+    const whiteKing = game.board.flat().find(p => p && p.type === 'king' && p.color === 'white');
+    const blackKing = game.board.flat().find(p => p && p.type === 'king' && p.color === 'black');
+    
+    if (!whiteKing) {
+        showWinnerModal('AI (Black) Wins!', '🤖');
+        return true;
+    }
+    if (!blackKing) {
+        showWinnerModal('You Win!', '🎉');
+        return true;
+    }
+    
+    if (game.isCheckmate) {
+        const winner = game.currentPlayer === 'white' ? 'AI (Black) Wins!' : 'You Win!';
+        const emoji = game.currentPlayer === 'white' ? '🤖' : '🎉';
+        showWinnerModal(winner, emoji);
+        return true;
+    }
+    
+    return false;
+}
+
+function showWinnerModal(winnerText, emoji) {
+    stopTimer();
+    const minutes = Math.floor(elapsedTime / 60000);
+    const seconds = Math.floor((elapsedTime % 60000) / 1000);
+    
+    document.getElementById('winnerTitle').textContent = emoji;
+    document.getElementById('winnerText').textContent = winnerText;
+    document.getElementById('finalTime').textContent = `Time: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    document.getElementById('winnerModal').classList.add('show');
+}
+
+document.getElementById('playAgainBtn').addEventListener('click', () => {
+    document.getElementById('winnerModal').classList.remove('show');
+    resetTimer();
+    initGame();
+});
