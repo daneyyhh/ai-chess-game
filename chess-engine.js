@@ -268,7 +268,89 @@ class ChessEngine {
     isCheckmate() {
         // Simplified checkmate detection
         return false;
+    isCheckmate() {
+        // Check if current player has any valid moves
+        const hasValidMoves = this.hasAnyValidMoves(this.currentPlayer);
+        
+        if (!hasValidMoves) {
+            // Check if king is in check
+            const kingInCheck = this.isKingInCheck(this.currentPlayer);
+            return kingInCheck;
+        }
+        return false;
     }
+
+    hasAnyValidMoves(color) {
+        for (let fromRow = 0; fromRow < 8; fromRow++) {
+            for (let fromCol = 0; fromCol < 8; fromCol++) {
+                const piece = this.board[fromRow][fromCol];
+                if (piece && this.getPieceColor(piece) === color) {
+                    const moves = this.getPieceMoves(piece, fromRow, fromCol);
+                    for (const [toRow, toCol] of moves) {
+                        if (this.isValidMove(fromRow, fromCol, toRow, toCol)) {
+                            // Test if move would leave king in check
+                            const tempBoard = this.copyBoard();
+                            const tempPiece = this.board[toRow][toCol];
+                            this.board[toRow][toCol] = piece;
+                            this.board[fromRow][fromCol] = null;
+                            
+                            const kingInCheck = this.isKingInCheck(color);
+                            
+                            // Restore board
+                            this.board[fromRow][fromCol] = piece;
+                            this.board[toRow][toCol] = tempPiece;
+                            
+                            if (!kingInCheck) return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    isKingInCheck(color) {
+        // Find king position
+        let kingRow = -1, kingCol = -1;
+        const kingPiece = color === 'white' ? '♔' : '♚';
+        
+        for (let row = 0; row < 8; row++) {
+            for (let col = 0; col < 8; col++) {
+                if (this.board[row][col] === kingPiece) {
+                    kingRow = row;
+                    kingCol = col;
+                    break;
+                }
+            }
+            if (kingRow !== -1) break;
+        }
+        
+        if (kingRow === -1) return false; // King not found
+        
+        // Check if any opponent piece can attack the king
+        const opponentColor = color === 'white' ? 'black' : 'white';
+        for (let row = 0; row < 8; row++) {
+            for (let col = 0; col < 8; col++) {
+                const piece = this.board[row][col];
+                if (piece && this.getPieceColor(piece) === opponentColor) {
+                    const moves = this.getPieceMoves(piece, row, col);
+                    if (moves.some(([r, c]) => r === kingRow && c === kingCol)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    isStalemate() {
+        // Stalemate: Player has no valid moves but king is not in check
+        const hasValidMoves = this.hasAnyValidMoves(this.currentPlayer);
+        const kingInCheck = this.isKingInCheck(this.currentPlayer);
+        return !hasValidMoves && !kingInCheck;
+    }
+    copyBoard() {
+        return this.board.map(row => [...row]);
+    }    }
 
     isStalemate() {
         return false;
