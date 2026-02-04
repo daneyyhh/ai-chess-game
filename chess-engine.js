@@ -266,9 +266,7 @@ class ChessEngine {
     }
 
     isCheckmate() {
-        // Simplified checkmate detection
-        return false;
-    isCheckmate() {
+        // Simplified checkmate detection        return false;    isCheckmate() {
         // Check if current player has any valid moves
         const hasValidMoves = this.hasAnyValidMoves(this.currentPlayer);
         
