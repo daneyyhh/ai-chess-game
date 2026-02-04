@@ -266,7 +266,6 @@ class ChessEngine {
     }
 
     isCheckmate() {
-        // Simplified checkmate detection        return false;    isCheckmate() {
         // Check if current player has any valid moves
         const hasValidMoves = this.hasAnyValidMoves(this.currentPlayer);
         
@@ -349,8 +348,3 @@ class ChessEngine {
     copyBoard() {
         return this.board.map(row => [...row]);
     }    }
-
-    isStalemate() {
-        return false;
-    }
-}
