@@ -14,6 +14,7 @@
         </header>
 
         <div class="game-info">
+                            <div id="timer">⏱ 00:00</div>
             <div class="player-info">
                 <div class="player player-white">
                     <h3>⬜ Player (White)</h3>
@@ -50,6 +51,16 @@
         </div>
     </div>
 
+
+        <!-- Winner Modal -->
+    <div id="winnerModal">
+        <div class="modal-content">
+            <h2 id="winnerTitle">🏆</h2>
+            <p id="winnerText"></p>
+            <p id="finalTime"></p>
+            <button id="playAgainBtn">Play Again</button>
+        </div>
+    </div>
     <script src="chess-engine.js"></script>
     <script src="app.js"></script>
 </body>
