@@ -310,7 +310,7 @@ function checkWinner() {
         return true;
     }
     
-    if (game.game.isCheckmate()
+    if (game.isCheckmate()
         const winner = game.currentPlayer === 'white' ? 'AI (Black) Wins!' : 'You Win!';
         const emoji = game.currentPlayer === 'white' ? '🤖' : '🎉';
         showWinnerModal(winner, emoji);
